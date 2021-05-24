@@ -1,11 +1,12 @@
-import time
 from tkinter import *
 import sqlite3
-
 import bcrypt as bcrypt
 
 window = Tk()
 frame_login = Frame(window)
+frame_options = Frame(window)
+frame_add_user = Frame(window)
+
 frame_login.grid()
 window.title("Login")
 window.minsize(width=400, height=200)
@@ -26,6 +27,10 @@ def check_credentials():
     c.execute('SELECT * FROM users WHERE username=?', (input_username.get(),))
     user = c.fetchone()
 
+    # todo: move these
+    frame_login.grid_forget()
+    show_admin_option()
+
     if user:
         user_salt = user[2]
         passwd = bytes(input_password.get(), encoding='utf-8')
@@ -33,6 +38,7 @@ def check_credentials():
 
         if user[2] == password:
             print("OK")
+            frame_login.grid_forget()
         else:
             label_error.config(text="Wrong username/password.")
     else:
@@ -59,6 +65,49 @@ def show_login_page():
 
 
 show_login_page()
+
+
+def show_admin_option():
+    frame_options.grid()
+    button_add_questions = Button(frame_options, text="Add questions", font=font, width=13, command=admin_add_questions)
+    button_add_questions.grid(column=1, row=1, pady=10, padx=20)
+    button_add_user = Button(frame_options, text="Add user", font=font, width=13, command=admin_add_user)
+    button_add_user.grid(column=2, row=1, pady=10)
+
+
+def admin_add_questions():
+    pass
+
+
+def admin_add_user():
+    frame_options.grid_forget()
+    show_add_user_page()
+
+
+def show_add_user_page():
+    frame_add_user.grid()
+    username = Entry(frame_add_user, font=font)
+    password = Entry(frame_add_user, font=font, show="*")
+    error = Label(frame_login, text="", font=font, foreground="red")
+
+    label_username = Label(frame_add_user, text="Username:", font=font)
+    label_username.grid(column=1, row=1, pady=(0, 10))
+
+    username.grid(column=2, row=1, pady=(0, 10), sticky=W)
+
+    label_password = Label(frame_add_user, text="Password:", font=font)
+    label_password.grid(column=1, row=2)
+
+    password.grid(column=2, row=2, sticky=W)
+
+    error.grid(column=2, row=3, sticky=W)
+
+    button = Button(frame_add_user, text="Add", font=font, width=10, command=add_user)
+    button.grid(column=2, row=4, pady=10)
+
+
+def add_user():
+    pass
 
 
 # c.execute('''CREATE TABLE IF NOT EXISTS users
