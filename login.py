@@ -1,7 +1,7 @@
 from tkinter import *
 import bcrypt
 from db import c
-from options import show_options_page
+import options
 from style import font
 from windowConfig import window
 
@@ -37,7 +37,7 @@ def check_credentials(username, password, label_error):
     c.execute('SELECT * FROM users WHERE username=?', (username,))
     user = c.fetchone()
     frame_login.grid_forget()
-    show_options_page()
+    options.show_options_page()
 
     if user:
         user_salt = user[2]
@@ -46,7 +46,7 @@ def check_credentials(username, password, label_error):
 
         if user[2] == password:
             frame_login.grid_forget()
-            show_options_page()
+            options.show_options_page()
         else:
             label_error.config(text="Wrong username/password.")
     else:

@@ -1,30 +1,19 @@
 
 from db import c
-from login import load_login_page
-from options import load_options_page
-from question import *
+import login
+import options
+import questions
+from questions import *
 
 import bcrypt as bcrypt
 
 from style import font
 
 
-
-
-
-
-
-
-
-
-
 # username_add = Entry(frame_add_user, font=font)
 # password_add = Entry(frame_add_user, font=font, show="*")
 # user_added_info = Label(frame_add_user, text="", font=font, foreground="red")
 from windowConfig import window
-
-
-
 
 
 def admin_show_questions():
@@ -80,9 +69,6 @@ def init_question_page():
     pass
 
 
-
-
-
 def init_login_page():
     pass
 
@@ -92,8 +78,9 @@ def init_options_page():
 
 
 def init():
-    load_options_page()
-    load_login_page()
+    questions.load_questions_page()
+    options.load_options_page()
+    login.load_login_page()
 
 
 init()
@@ -130,9 +117,6 @@ def show_add_user_page():
 def back_to_options(frame):
     frame.grid_forget()
     #show_admin_option()
-
-
-
 
 
 def back_to_login_page(frame):
