@@ -114,9 +114,7 @@ def show_add_user_page():
     pass
 
 
-def back_to_options(frame):
-    frame.grid_forget()
-    #show_admin_option()
+
 
 
 def back_to_login_page(frame):
