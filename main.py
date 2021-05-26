@@ -1,28 +1,8 @@
-
-from db import c
 import login
-import options
 import questions
 from questions import *
-
 import bcrypt as bcrypt
-
-from style import font
-
-
-# username_add = Entry(frame_add_user, font=font)
-# password_add = Entry(frame_add_user, font=font, show="*")
-# user_added_info = Label(frame_add_user, text="", font=font, foreground="red")
 from windowConfig import window
-
-
-def admin_show_questions():
-    pass
-
-
-def admin_show_users():
-    #frame_options.grid_forget()
-    show_users_page()
 
 
 def show_users_page():
@@ -53,41 +33,19 @@ def show_users_page():
     #button_back.grid(column=1, row=2, sticky=W)
 
 
-def admin_add_questions():
-    #frame_options.grid_forget()
-    show_add_questions_page()
-
-
 def admin_add_user():
     #frame_options.grid_forget()
     show_add_user_page()
 
 
-#question = QuestionPage(frame_add_questions)
-
-def init_question_page():
-    pass
-
-
-def init_login_page():
-    pass
-
-
-def init_options_page():
-    pass
-
-
 def init():
     questions.load_questions_page()
+    questions.load_add_questions_page()
     options.load_options_page()
     login.load_login_page()
 
 
 init()
-
-
-def show_add_questions_page():
-    pass
 
 
 def show_add_user_page():
@@ -112,13 +70,6 @@ def show_add_user_page():
     #                      command=lambda: back_to_options(frame_add_user))
     # button_back.grid(column=1, row=5, sticky=S)
     pass
-
-
-
-
-
-def back_to_login_page(frame):
-    frame.grid_forget()
 
 
 def add_user(username, password):

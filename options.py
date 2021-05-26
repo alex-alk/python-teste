@@ -7,14 +7,18 @@ from windowConfig import window
 frame_options = Frame(window, padx=5)
 print("options")
 
+
 def load_options_page():
 
-    button_questions = Button(frame_options, text="Manage questions", font=font, width=16,
-                              command=lambda: questions.show_questions_page(frame_options))
-    button_questions.grid(column=1, row=1, pady=(55, 70), padx=(35, 10))
+    button_questions = Button(frame_options, text="Add a question", font=font, width=16,
+                              command=lambda: questions.show_add_questions_page(frame_options))
+    button_questions.grid(column=1, row=1, pady=(45, 0), padx=(35, 10))
     button_users = Button(frame_options, text="Manage users", font=font, width=16,
                           command=lambda: login.show_login_page(frame_options))
-    button_users.grid(column=2, row=1, pady=(55, 70))
+    button_users.grid(column=2, row=1, pady=(45, 0))
+    button_questions = Button(frame_options, text="Show questions", font=font, width=16,
+                              command=lambda: questions.show_questions_page(frame_options))
+    button_questions.grid(column=1, row=2, pady=(5, 40), padx=(35, 10))
 
     button_back = Button(frame_options, text="< Back", font=font, width=8,
                          command=lambda: login.show_login_page(frame_options))
