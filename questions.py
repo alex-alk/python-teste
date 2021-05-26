@@ -34,16 +34,19 @@ def show_questions_page(frame):
     for i in tree.get_children():
         tree.delete(i)
     for row in questions:
-        row = [row[0], row[1], row[6]]
+        q = row[1].partition("\n")[0]
+        if "\n" in row[1]:
+            q += " ..."
+        row = [row[0], q, row[6]]
         tree.insert("", END, values=row, tags=('evenrow',))
 
 
-def load_add_questions_page():
+def load_show_questions_page():
     vsb.pack(fill=Y, side=RIGHT)
     vsb.config(command=tree.yview)
     tree.column("#1", anchor=CENTER, width=40, stretch=NO)
     tree.heading("#1", text="ID")
-    tree.column("#2", anchor=CENTER)
+    tree.column("#2", anchor=W)
     tree.heading("#2", text="Question")
     tree.column("#3", anchor=CENTER, width=80, stretch=NO)
     tree.heading("#3", text="Answer")
@@ -54,7 +57,7 @@ def load_add_questions_page():
     button_back.pack()
 
 
-def load_questions_page():
+def load_add_questions_page():
     label_question = Label(frame_questions, text="Question:", font=font)
     label_question.pack(anchor=W)
 

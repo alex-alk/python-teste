@@ -39,7 +39,7 @@ def admin_add_user():
 
 
 def init():
-    questions.load_questions_page()
+    questions.load_show_questions_page()
     questions.load_add_questions_page()
     options.load_options_page()
     login.load_login_page()
