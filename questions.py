@@ -10,6 +10,8 @@ from windowConfig import window
 frame_questions = Frame(window, padx=10, pady=5)
 frame_show_questions = Frame(window, padx=10, pady=5)
 label_question_info = Label(frame_questions, text="", font=font)
+vsb = Scrollbar(frame_show_questions)
+tree = Treeview(frame_show_questions, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set, selectmode="extended")
 print("questions")
 
 
@@ -27,24 +29,25 @@ def show_questions_page(frame):
     window.geometry('{}x{}'.format(800, 700))
     window.resizable(width=True, height=True)
 
-
-def load_add_questions_page():
     c.execute('SELECT * FROM questions')
     questions = c.fetchall()
+    for i in tree.get_children():
+        tree.delete(i)
+    for row in questions:
+        row = [row[0], row[1], row[6]]
+        tree.insert("", END, values=row, tags=('evenrow',))
 
-    vsb = Scrollbar(frame_show_questions)
+
+def load_add_questions_page():
     vsb.pack(fill=Y, side=RIGHT)
-    tree = Treeview(frame_show_questions, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set, selectmode="extended")
     vsb.config(command=tree.yview)
-    tree.column("#1", anchor=CENTER, width=3)
+    tree.column("#1", anchor=CENTER, width=40, stretch=NO)
     tree.heading("#1", text="ID")
     tree.column("#2", anchor=CENTER)
     tree.heading("#2", text="Question")
-    tree.column("#3", anchor=CENTER)
+    tree.column("#3", anchor=CENTER, width=80, stretch=NO)
     tree.heading("#3", text="Answer")
     tree.pack(fill=X)
-    for row in questions:
-        tree.insert("", END, values=row, tags=('evenrow',))
 
     button_back = Button(frame_show_questions, text="< Back", font=font, width=8,
                          command=lambda: options.back_to_options_pack(frame_show_questions))
@@ -116,7 +119,7 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
             or answer3.get("1.0", "end-1c") == "" or answer4.get("1.0", "end-1c") == "" or correct_answer.get() == "":
         label.config(text="Empty fields not allowed.", foreground="red")
     else:
-        print()
+        print("saved")
         now = int(time.time())
 
         c.execute(f"INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, date) VALUES "
