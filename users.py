@@ -1,9 +1,7 @@
 import time
 from tkinter import *
 from tkinter.ttk import Treeview
-
 import bcrypt
-
 import options
 from db import c, con
 from style import font
@@ -16,7 +14,6 @@ frame_under_table = Frame(frame_show_questions)
 label_users_info = Label(frame_add_user, text="", font=font)
 vsb = Scrollbar(frame_table)
 tree = Treeview(frame_table, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set)
-print("questions")
 
 
 def show_add_user_page(frame):

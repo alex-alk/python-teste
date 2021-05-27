@@ -6,7 +6,6 @@ from style import font
 from windowConfig import window
 
 frame_options = Frame(window, padx=5)
-print("options")
 
 
 def load_options_page():

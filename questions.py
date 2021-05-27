@@ -26,7 +26,6 @@ def show_add_questions_page(frame):
 
 
 def show_questions_page(frame):
-    print("showing page")
     frame.grid_forget()
     frame_show_questions.pack(expand=True, fill=BOTH, anchor=N)
     frame_table.pack(expand=True, fill=BOTH)
@@ -63,7 +62,6 @@ def load_show_questions_page():
 
 
 def load_add_questions_page():
-    print("QP loaded")
     label_question = Label(frame_add_questions, text="Question:", font=font)
     label_question.pack(anchor=W)
 
@@ -144,3 +142,7 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
         answer4.delete(1.0, END)
         correct_answer.delete(0, END)
         question.focus()
+
+
+def remove_question():
+    pass

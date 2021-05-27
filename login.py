@@ -7,7 +7,6 @@ from windowConfig import window
 
 
 frame_login = Frame(window, padx=40, pady=40)
-print("login")
 
 
 def show_login_page(frame):
