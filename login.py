@@ -1,6 +1,6 @@
+import sqlite3
 from tkinter import *
 import bcrypt
-from db import c
 import options
 from style import font
 from windowConfig import window
@@ -33,8 +33,11 @@ def load_login_page():
 
 
 def check_credentials(username, password, label_error):
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
     c.execute('SELECT * FROM users WHERE username=?', (username,))
     user = c.fetchone()
+    con.close()
     frame_login.grid_forget()
     options.show_options_page()
 

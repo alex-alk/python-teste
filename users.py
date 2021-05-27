@@ -1,9 +1,9 @@
+import sqlite3
 import time
 from tkinter import *
 from tkinter.ttk import Treeview
 import bcrypt
 import options
-from db import c, con
 from style import font
 from windowConfig import window
 
@@ -33,8 +33,12 @@ def show_users_page(frame):
     window.geometry('{}x{}'.format(800, 700))
     window.resizable(width=True, height=True)
 
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
     c.execute('SELECT * FROM users')
     questions = c.fetchall()
+    con.close()
     for i in tree.get_children():
         tree.delete(i)
     for row in questions:
@@ -101,9 +105,13 @@ def save_user(username, password,  label):
         passwd = bytes(password.get(), encoding='utf-8')
         salt = bcrypt.gensalt()
         password_db = bcrypt.hashpw(passwd, salt)
+
+        con = sqlite3.connect('teste.db')
+        c = con.cursor()
         c.execute(f"INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, {now})",
                   (username.get(), password_db, salt))
         con.commit()
+        con.close()
         label.config(text="User added.", foreground="green")
         username.delete(0, END)
         password.delete(0, END)

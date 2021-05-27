@@ -1,9 +1,9 @@
+import sqlite3
 import time
 from tkinter import *
 from tkinter.ttk import Treeview
 
 import options
-from db import c, con
 from style import font
 from windowConfig import window
 
@@ -33,7 +33,11 @@ def show_questions_page(frame):
     window.geometry('{}x{}'.format(800, 700))
     window.resizable(width=True, height=True)
 
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
     c.execute('SELECT * FROM questions')
+
     questions = c.fetchall()
     for i in tree.get_children():
         tree.delete(i)
@@ -43,6 +47,8 @@ def show_questions_page(frame):
             q += " ..."
         row = [row[0], q, row[6]]
         tree.insert("", END, values=row, tags=('evenrow',))
+
+    con.close()
 
 
 def load_show_questions_page():
@@ -55,6 +61,10 @@ def load_show_questions_page():
     tree.column("#3", anchor=CENTER, width=80, stretch=NO)
     tree.heading("#3", text="Answer")
     tree.pack(expand=True, fill=BOTH)
+
+    button_remove = Button(frame_under_table, text="Remove selected", font=font,
+                           command=lambda: remove_question())
+    button_remove.pack(pady=(5, 10), anchor=W)
 
     button_back = Button(frame_under_table, text="< Back", font=font, width=8,
                          command=lambda: options.back_to_options_pack(frame_show_questions))
@@ -95,6 +105,12 @@ def load_add_questions_page():
     label_correct_answer = Label(frame_add_questions, text="Correct Answer:", font=font)
     label_correct_answer.pack(pady=(10, 0), anchor=W)
 
+    variable = StringVar(frame_add_questions)
+    variable.set("one")  # default value
+
+    w = OptionMenu(frame_add_questions, variable, "one", "two", "three")
+    w.pack()
+
     entry_correct_answer = Entry(frame_add_questions, font=font)
     entry_correct_answer.pack(anchor=W)
 
@@ -128,12 +144,15 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
     else:
         print("saved")
         now = int(time.time())
+        con = sqlite3.connect('teste.db')
+        c = con.cursor()
 
         c.execute(f"INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, date) VALUES "
                   f"(?,?,?,?,?,?,{now})", (question.get("1.0", "end-1c"), answer1.get("1.0", "end-1c"),
                                            answer2.get("1.0", "end-1c"), answer3.get("1.0", "end-1c"),
                                            answer4.get("1.0", "end-1c"), correct_answer.get()))
         con.commit()
+        con.close()
         label.config(text="Question added.", foreground="green")
         question.delete(1.0, END)
         answer1.delete(1.0, END)
@@ -145,4 +164,17 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
 
 
 def remove_question():
-    pass
+    x = tree.selection()[0]
+
+    selected = tree.focus()
+    question = tree.item(selected, "values")
+
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
+    c.execute(f"DELETE FROM questions WHERE id=" + question[0])
+    con.commit()
+    tree.delete(x)
+
+    con.close()
+

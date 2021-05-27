@@ -17,8 +17,4 @@ def init():
 init()
 
 
-# todo: use this on x
-# con.close()
-
-
 window.mainloop()
