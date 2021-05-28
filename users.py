@@ -6,6 +6,9 @@ import bcrypt
 import options
 from style import font
 from windowConfig import window
+from tkinter.ttk import Button
+from tkinter.ttk import Entry
+
 
 frame_add_user = Frame(window, padx=10, pady=5)
 frame_show_questions = Frame(window, padx=10, pady=5)
@@ -57,7 +60,7 @@ def load_show_users_page():
     tree.heading("#3", text="Score")
     tree.pack(expand=True, fill=BOTH)
 
-    button_back = Button(frame_under_table, text="< Back", font=font, width=8,
+    button_back = Button(frame_under_table, text="< Back", width=8,
                          command=lambda: options.back_to_options_pack(frame_show_questions))
     button_back.pack(pady=10)
 
@@ -78,10 +81,10 @@ def load_add_user_page():
 
     label_users_info.grid(column=2, row=3, sticky=W)
 
-    button = Button(frame_add_user, text="Add", font=font, width=10,
+    button = Button(frame_add_user, text="Add", width=10,
                     command=lambda: save_user(username_add, password_add, label_users_info))
     button.grid(column=2, row=4, pady=(10, 25))
-    button_back = Button(frame_add_user, text="< Back", font=font, width=8,
+    button_back = Button(frame_add_user, text="< Back", width=8,
                          command=lambda: options.back_to_options(frame_add_user))
     button_back.grid(column=1, row=5, sticky=S+W)
 

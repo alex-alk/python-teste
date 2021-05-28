@@ -2,6 +2,8 @@ import sqlite3
 import time
 from tkinter import *
 from tkinter.ttk import Treeview
+from tkinter.ttk import Button
+from tkinter.ttk import Combobox
 
 import options
 from style import font
@@ -14,7 +16,7 @@ frame_under_table = Frame(frame_show_questions)
 label_question_info = Label(frame_add_questions, text="", font=font)
 vsb = Scrollbar(frame_table)
 tree = Treeview(frame_table, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set)
-print("questions")
+answers = {"Answer 1": 1, "Answer 2": 2, "Answer 3": 3, "Answer 4": 4}
 
 
 def show_add_questions_page(frame):
@@ -62,11 +64,11 @@ def load_show_questions_page():
     tree.heading("#3", text="Answer")
     tree.pack(expand=True, fill=BOTH)
 
-    button_remove = Button(frame_under_table, text="Remove selected", font=font,
+    button_remove = Button(frame_under_table, text="Remove selected",
                            command=lambda: remove_question())
     button_remove.pack(pady=(5, 10), anchor=W)
 
-    button_back = Button(frame_under_table, text="< Back", font=font, width=8,
+    button_back = Button(frame_under_table, text="< Back", width=8,
                          command=lambda: options.back_to_options_pack(frame_show_questions))
     button_back.pack(pady=10)
 
@@ -106,22 +108,20 @@ def load_add_questions_page():
     label_correct_answer.pack(pady=(10, 0), anchor=W)
 
     variable = StringVar(frame_add_questions)
-    variable.set("one")  # default value
 
-    w = OptionMenu(frame_add_questions, variable, "one", "two", "three")
-    w.pack()
-
-    entry_correct_answer = Entry(frame_add_questions, font=font)
-    entry_correct_answer.pack(anchor=W)
+    select = Combobox(frame_add_questions, textvariable=variable, font=font, width=10,
+                      values=("Answer 1", "Answer 2", "Answer 3", "Answer 4"))
+    select.set("Answer 1")
+    select.pack(anchor=W)
 
     label_question_info.pack(pady=(10, 0), anchor=W)
 
-    button_save = Button(frame_add_questions, text="Save", font=font, width=8,
-                         command=lambda: save_question(entry, entry1, entry2, entry3, entry4, entry_correct_answer,
+    button_save = Button(frame_add_questions, text="Save", width=8,
+                         command=lambda: save_question(entry, entry1, entry2, entry3, entry4, variable,
                                                        label_question_info))
     button_save.pack(pady=(10, 0))
 
-    button_back = Button(frame_add_questions, text="< Back", font=font, width=8,
+    button_back = Button(frame_add_questions, text="< Back", width=8,
                          command=lambda: options.back_to_options_pack(frame_add_questions))
     button_back.pack(anchor=W)
 
@@ -139,10 +139,9 @@ class Question:
 
 def save_question(question, answer1, answer2, answer3, answer4, correct_answer, label):
     if question.get("1.0", "end-1c") == "" or answer1.get("1.0", "end-1c") == "" or answer2.get("1.0", "end-1c") == "" \
-            or answer3.get("1.0", "end-1c") == "" or answer4.get("1.0", "end-1c") == "" or correct_answer.get() == "":
+            or answer3.get("1.0", "end-1c") == "" or answer4.get("1.0", "end-1c") == "":
         label.config(text="Empty fields not allowed.", foreground="red")
     else:
-        print("saved")
         now = int(time.time())
         con = sqlite3.connect('teste.db')
         c = con.cursor()
@@ -150,7 +149,7 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
         c.execute(f"INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, date) VALUES "
                   f"(?,?,?,?,?,?,{now})", (question.get("1.0", "end-1c"), answer1.get("1.0", "end-1c"),
                                            answer2.get("1.0", "end-1c"), answer3.get("1.0", "end-1c"),
-                                           answer4.get("1.0", "end-1c"), correct_answer.get()))
+                                           answer4.get("1.0", "end-1c"), answers.get(correct_answer.get())))
         con.commit()
         con.close()
         label.config(text="Question added.", foreground="green")
