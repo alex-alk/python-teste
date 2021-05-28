@@ -111,6 +111,7 @@ def load_add_questions_page():
 
     select = Combobox(frame_add_questions, textvariable=variable, font=font, width=10,
                       values=("Answer 1", "Answer 2", "Answer 3", "Answer 4"))
+    frame_add_questions.option_add('*TCombobox*Listbox.font', ("Arial", 12))
     select.set("Answer 1")
     select.pack(anchor=W)
 
@@ -158,7 +159,6 @@ def save_question(question, answer1, answer2, answer3, answer4, correct_answer, 
         answer2.delete(1.0, END)
         answer3.delete(1.0, END)
         answer4.delete(1.0, END)
-        correct_answer.delete(0, END)
         question.focus()
 
 

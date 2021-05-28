@@ -2,6 +2,7 @@ import sqlite3
 from tkinter import *
 import bcrypt
 import options
+import quiz
 from style import font
 from windowConfig import window
 from tkinter.ttk import Button
@@ -10,7 +11,6 @@ from tkinter.ttk import Entry
 
 s = Style()
 s.configure("TButton", font=('Arial', 12))
-s.configure('*TCombobox*Listbox', foreground="red", color="red")
 
 frame_login = Frame(window, padx=40, pady=40)
 
@@ -45,7 +45,7 @@ def check_credentials(username, password, label_error):
     user = c.fetchone()
     con.close()
     frame_login.grid_forget()
-    options.show_options_page()
+    quiz.show_quiz_page()
 
     if user:
         user_salt = user[2]
