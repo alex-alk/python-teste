@@ -2,6 +2,8 @@ import sqlite3
 from tkinter import *
 from tkinter.ttk import Button
 from tkinter.ttk import Radiobutton
+
+import login
 from windowConfig import window
 
 frame_quiz = Frame(window, padx=5)
@@ -9,28 +11,32 @@ question = Label(frame_quiz, text="")
 button_next_question = Button(frame_quiz, text="Next question", command=lambda: show_next_question())
 
 correct_answers = 0
-
-con = sqlite3.connect('teste.db')
-c = con.cursor()
-
-c.execute('SELECT * FROM questions limit 10')
-questions = c.fetchall()
-
-con.close()
+selected = IntVar()
+answer1_button = Radiobutton(frame_quiz, text="", value=1, variable=selected)
+answer2_button = Radiobutton(frame_quiz, text="", value=2, variable=selected)
+answer3_button = Radiobutton(frame_quiz, text="", value=3, variable=selected)
+answer4_button = Radiobutton(frame_quiz, text="", value=4, variable=selected)
 
 question_nr = 1
+questions = []
 
-selected = IntVar()
-answer1_button = Radiobutton(frame_quiz, text=questions[0][2], value=1, variable=selected)
-answer2_button = Radiobutton(frame_quiz, text=questions[0][3], value=2, variable=selected)
-answer3_button = Radiobutton(frame_quiz, text=questions[0][4], value=3, variable=selected)
-answer4_button = Radiobutton(frame_quiz, text=questions[0][5], value=4, variable=selected)
 selected.set(1)
 
 
 def load_quiz_page():
+    global questions
     question.pack(anchor=W)
     button_next_question.pack(anchor=SE)
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
+    c.execute('SELECT * FROM questions limit 10')
+    questions = c.fetchall()
+    con.close()
+    answer1_button.config(text=questions[0][2])
+    answer2_button.config(text=questions[0][3])
+    answer3_button.config(text=questions[0][4])
+    answer4_button.config(text=questions[0][5])
 
 
 def show_quiz_page():
@@ -67,6 +73,14 @@ def show_next_question():
 
     elif len(questions) == question_nr:
         print("Submitted")
+        con = sqlite3.connect('teste.db')
+        c = con.cursor()
+
+        score = "{:.1f}".format(correct_answers/len(questions))
+
+        c.execute(f"UPDATE users SET score = {score} where id={login.user[0]})")
+        con.commit()
+        con.close()
 
 
 

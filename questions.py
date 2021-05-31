@@ -15,7 +15,7 @@ frame_table = Frame(frame_show_questions)
 frame_under_table = Frame(frame_show_questions)
 label_question_info = Label(frame_add_questions, text="", font=font)
 vsb = Scrollbar(frame_table)
-tree = Treeview(frame_table, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set)
+tree = Treeview(frame_table, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set, selectmode="browse")
 answers = {"Answer 1": 1, "Answer 2": 2, "Answer 3": 3, "Answer 4": 4}
 
 
@@ -125,17 +125,6 @@ def load_add_questions_page():
     button_back = Button(frame_add_questions, text="< Back", width=8,
                          command=lambda: options.back_to_options_pack(frame_add_questions))
     button_back.pack(anchor=W)
-
-
-class Question:
-    def __init__(self, question, answer1, answer2, answer3, answer4, correct_answer):
-        self.question = question
-        self.answer1 = answer1
-        self.answer2 = answer2
-        self.answer3 = answer3
-        self.answer4 = answer4
-        self.correct_answer = correct_answer
-        self.date = int(time.time())
 
 
 def save_question(question, answer1, answer2, answer3, answer4, correct_answer, label):

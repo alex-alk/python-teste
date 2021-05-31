@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 import time
 from tkinter import *
@@ -10,19 +11,20 @@ from tkinter.ttk import Button
 from tkinter.ttk import Entry
 
 
-frame_add_user = Frame(window, padx=10, pady=5)
+frame_add_user = Frame(window, padx=10)
 frame_show_questions = Frame(window, padx=10, pady=5)
 frame_table = Frame(frame_show_questions)
 frame_under_table = Frame(frame_show_questions)
 label_users_info = Label(frame_add_user, text="", font=font)
 vsb = Scrollbar(frame_table)
-tree = Treeview(frame_table, column=("c1", "c2", "c3"), show='headings', yscrollcommand=vsb.set)
+tree = Treeview(frame_table, column=("c1", "c2", "c3", "c4"), show='headings', yscrollcommand=vsb.set,
+                selectmode="browse")
 
 
 def show_add_user_page(frame):
     frame.grid_forget()
     frame_add_user.grid()
-    window.geometry('{}x{}'.format(400, 240))
+    window.geometry('{}x{}'.format(400, 230))
     window.resizable(width=False, height=False)
     label_users_info.config(text="", foreground="green")
 
@@ -40,13 +42,13 @@ def show_users_page(frame):
     c = con.cursor()
 
     c.execute('SELECT * FROM users')
-    questions = c.fetchall()
+    users = c.fetchall()
     con.close()
     for i in tree.get_children():
         tree.delete(i)
-    for row in questions:
-        row = [row[0], row[1], 10]
-        tree.insert("", END, values=row, tags=('evenrow',))
+    for row in users:
+        row = [row[0], row[1], datetime.datetime.fromtimestamp(row[4]).strftime('%Y-%m-%d'), row[5]]
+        tree.insert("", END, values=row)
 
 
 def load_show_users_page():
@@ -57,12 +59,34 @@ def load_show_users_page():
     tree.column("#2", anchor=W)
     tree.heading("#2", text="User")
     tree.column("#3", anchor=CENTER, width=100, stretch=NO)
-    tree.heading("#3", text="Score")
+    tree.heading("#3", text="Date added")
+    tree.column("#4", anchor=CENTER, width=100, stretch=NO)
+    tree.heading("#4", text="Score")
     tree.pack(expand=True, fill=BOTH)
+
+    button_remove = Button(frame_under_table, text="Remove selected",
+                           command=lambda: remove_user())
+    button_remove.pack(pady=(5, 10), anchor=W)
 
     button_back = Button(frame_under_table, text="< Back", width=8,
                          command=lambda: options.back_to_options_pack(frame_show_questions))
     button_back.pack(pady=10)
+
+
+def remove_user():
+    x = tree.selection()[0]
+
+    selected = tree.focus()
+    question = tree.item(selected, "values")
+
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
+    c.execute(f"DELETE FROM users WHERE id=" + question[0])
+    con.commit()
+    tree.delete(x)
+
+    con.close()
 
 
 def load_add_user_page():
@@ -89,17 +113,6 @@ def load_add_user_page():
     button_back.grid(column=1, row=5, sticky=S+W)
 
 
-class User:
-    def __init__(self, question, answer1, answer2, answer3, answer4, correct_answer):
-        self.question = question
-        self.answer1 = answer1
-        self.answer2 = answer2
-        self.answer3 = answer3
-        self.answer4 = answer4
-        self.correct_answer = correct_answer
-        self.date = int(time.time())
-
-
 def save_user(username, password,  label):
     if username.get() == "" or password.get() == "":
         label.config(text="Bad username or password.", foreground="red")
@@ -111,11 +124,20 @@ def save_user(username, password,  label):
 
         con = sqlite3.connect('teste.db')
         c = con.cursor()
-        c.execute(f"INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, {now})",
-                  (username.get(), password_db, salt))
-        con.commit()
+
+        c.execute(f"SELECT * FROM users where username=?", (username.get(),))
+        found_user = c.fetchone()
+
+        if not found_user:
+            c.execute(f"INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, {now})",
+                      (username.get(), password_db, salt))
+            con.commit()
+            label.config(text="User added.", foreground="green")
+        else:
+            label.config(text="Username taken.", foreground="red")
+
         con.close()
-        label.config(text="User added.", foreground="green")
+
         username.delete(0, END)
         password.delete(0, END)
         username.focus()

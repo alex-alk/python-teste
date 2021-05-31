@@ -14,6 +14,8 @@ s.configure("TButton", font=('Arial', 12))
 
 frame_login = Frame(window, padx=40, pady=40)
 
+user = []
+
 
 def show_login_page(frame):
     frame.grid_forget()
@@ -39,13 +41,12 @@ def load_login_page():
 
 
 def check_credentials(username, password, label_error):
+    global user
     con = sqlite3.connect('teste.db')
     c = con.cursor()
     c.execute('SELECT * FROM users WHERE username=?', (username,))
     user = c.fetchone()
     con.close()
-    frame_login.grid_forget()
-    quiz.show_quiz_page()
 
     if user:
         user_salt = user[2]
@@ -54,7 +55,10 @@ def check_credentials(username, password, label_error):
 
         if user[2] == password:
             frame_login.grid_forget()
-            options.show_options_page()
+            if user[1] == 'admin':
+                options.show_options_page()
+            else:
+                quiz.show_quiz_page()
         else:
             label_error.config(text="Wrong username/password.")
     else:
