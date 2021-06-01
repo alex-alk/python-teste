@@ -26,6 +26,7 @@ def load_options_page():
     button_back = Button(frame_options, text="< Back", width=8,
                          command=lambda: login.show_login_page(frame_options))
     button_back.grid(column=1, row=3, sticky=W+S)
+    frame_options.focus()
 
 
 def show_options_page():
