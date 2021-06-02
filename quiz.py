@@ -1,4 +1,5 @@
 import sqlite3
+from random import shuffle
 from tkinter import *
 from tkinter.ttk import Button
 from tkinter.ttk import Radiobutton
@@ -9,7 +10,7 @@ from windowConfig import window
 
 frame_quiz = Frame(window, padx=5)
 frame_show_score = Frame(window, padx=5)
-question = Label(frame_quiz, text="", font=font, wraplength=250, justify=LEFT)
+question = Label(frame_quiz, text="", font=font, wraplength=350, justify=LEFT)
 button_next_question = Button(frame_quiz, text="Next question", command=lambda: check_question())
 
 correct_answers = 0
@@ -36,9 +37,18 @@ def load_quiz_page():
 
 
 def show_quiz_page():
+    global questions
     frame_quiz.pack(fill=BOTH)
     window.geometry("")
     window.resizable(width=True, height=True)
+
+    con = sqlite3.connect('teste.db')
+    c = con.cursor()
+
+    c.execute('SELECT * FROM questions ORDER BY RANDOM() LIMIT 10')
+    questions = c.fetchall()
+
+    con.close()
 
     show_question()
 
@@ -49,13 +59,6 @@ def show_question():
     global questions
 
     selected.set(1)
-
-    con = sqlite3.connect('teste.db')
-    c = con.cursor()
-
-    c.execute('SELECT * FROM questions limit 10')
-    questions = c.fetchall()
-    con.close()
 
     if len(questions) >= question_nr:
         window.title(f"Question {question_nr}/{len(questions)}")
