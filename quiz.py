@@ -1,5 +1,4 @@
 import sqlite3
-from random import shuffle
 from tkinter import *
 from tkinter.ttk import Button
 from tkinter.ttk import Radiobutton

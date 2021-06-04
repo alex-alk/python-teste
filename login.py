@@ -60,6 +60,7 @@ def check_credentials(username, password, label_error):
         if user[2] == password_encrypted:  # if logged in
             frame_login.grid_forget()
             if user[1] == 'admin':
+                label_error.config(text="")
                 options.show_options_page()
             else:
                 quiz.show_quiz_page()

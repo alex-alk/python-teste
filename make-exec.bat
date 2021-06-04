@@ -1,1 +1,1 @@
- C:\Users\Alex\Documents\Projects\Python\Teste\venv\Scripts\pyinstaller.exe -F -w main.py
+venv\Scripts\pyinstaller.exe -F -w main.py
